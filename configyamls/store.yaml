@@ -1,0 +1,6 @@
+mysql:
+  user: qae
+  password: qae
+  host: localhost
+  port: 3306
+  dbname: qae

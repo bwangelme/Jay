@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"net"
+	"qae/initial"
 	"qae/pb/gen/app"
 
 	"google.golang.org/grpc"
@@ -33,6 +34,7 @@ func (s *server) Double(ctx context.Context, req *app.Number) (resp *app.Number,
 }
 
 func main() {
+	initial.InitQAE()
 	addr := ":8000"
 	listener, err := net.Listen("tcp", addr)
 	if err != nil {
