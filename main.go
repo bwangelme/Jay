@@ -2,9 +2,9 @@ package main
 
 import (
 	"context"
-	"log"
 	"net"
 	"qae/initial"
+	"qae/logger"
 	"qae/pb/gen/app"
 
 	"google.golang.org/grpc"
@@ -27,9 +27,9 @@ func (s *server) Get(ctx context.Context, req *app.AppID) (resp *app.App, err er
 	}, nil
 }
 
-func (s *server) Double(ctx context.Context, req *app.Number) (resp *app.Number, err error) {
+func (s *server) Triple(ctx context.Context, req *app.Number) (resp *app.Number, err error) {
 	return &app.Number{
-		Value: req.Value * 2,
+		Value: req.Value * 3,
 	}, nil
 }
 
@@ -38,14 +38,14 @@ func main() {
 	addr := ":8000"
 	listener, err := net.Listen("tcp", addr)
 	if err != nil {
-		log.Printf("Listen %v failed %v\n", addr, err)
+		logger.Infof("Listen %v failed %v\n", addr, err)
 		return
 	}
 
 	s := grpc.NewServer()
 	app.RegisterAppServiceServer(s, NewServer())
 	if err := s.Serve(listener); err != nil {
-		log.Printf("grpc serve failed %v", err)
+		logger.Infof("grpc serve failed %v", err)
 		return
 	}
 }

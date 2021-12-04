@@ -1,0 +1,6 @@
+appname: bridge
+image: xxx
+config:
+  - store:
+      online: config/store.yaml
+      local: config/store-prod.yaml

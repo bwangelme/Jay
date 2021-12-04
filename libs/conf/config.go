@@ -36,7 +36,7 @@ var (
 func InitStoreConfig() {
 	storeConf = &storeConfig{}
 
-	confFile := filepath.Join(env.AppRoot, "configyamls", "store.yaml")
+	confFile := filepath.Join(env.AppRoot, "config", "store.yaml")
 	content, err := ioutil.ReadFile(confFile)
 	helper.EnsureOK(err, map[string]interface{}{
 		"msg":     "read conf file failed",
