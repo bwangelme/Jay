@@ -21,7 +21,7 @@ type MySQLConfig struct {
 
 //DSN return dataSourceName
 func (c *MySQLConfig) DSN() string {
-	return fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", c.User, c.Password, c.Host, c.Port, c.DBName)
+	return fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", c.User, c.Password, c.Host, c.Port, c.DBName)
 }
 
 type storeConfig struct {
