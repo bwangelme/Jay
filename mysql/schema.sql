@@ -10,6 +10,15 @@ CREATE TABLE `apps` (
     UNIQUE KEY `name` (`name`)
 ) DEFAULT CHARSET=latin1;
 
+CREATE TABLE `commit` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `app` varchar(40) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
+    `git_commit` varchar(40) NOT NULL,
+    `created_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `modified_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+) DEFAULT CHARSET=latin1;
+
 CREATE TABLE `task` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `app` varchar(64) NOT NULL,

@@ -62,10 +62,6 @@ func initAppHandler() {
 	App = NewAppHandler()
 }
 
-func InitHandlers() {
-	initAppHandler()
-}
-
 func returnGRPCError(err error) (resp *app.CreateResp) {
 	resp = &app.CreateResp{}
 	resp.Err = fmt.Sprintf("%v", err)

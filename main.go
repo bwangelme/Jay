@@ -5,7 +5,6 @@ import (
 	"qae/grpcview"
 	"qae/initial"
 	"qae/logger"
-	"qae/pb/gen/app"
 
 	"google.golang.org/grpc"
 )
@@ -22,8 +21,7 @@ func main() {
 	s := grpc.NewServer()
 
 	// register view
-	grpcview.InitHandlers()
-	app.RegisterAppServiceServer(s, grpcview.App)
+	grpcview.InitHandlers(s)
 
 	if err := s.Serve(listener); err != nil {
 		logger.Infof("grpc serve failed %v", err)
