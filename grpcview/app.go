@@ -30,6 +30,22 @@ func (s *AppHandler) Get(ctx context.Context, req *app.AppID) (resp *app.App, er
 	}, nil
 }
 
+func (s *AppHandler) List(ctx context.Context, req *app.ListReq) (resp *app.ListResp, err error) {
+	resp = &app.ListResp{}
+
+	total, apps, err := appservice.List(ctx, req.Start, req.Limit)
+
+	var grpcApps = make([]*app.App, 0)
+	for i := 0; i < len(apps); i++ {
+		a := convertor.NewGRPCAppFromModelApp(apps[i])
+		grpcApps = append(grpcApps, a)
+	}
+	resp.Total = total
+	resp.Apps = grpcApps
+
+	return resp, nil
+}
+
 func (s *AppHandler) Create(ctx context.Context, req *app.CreateReq) (resp *app.CreateResp, err error) {
 	resp = &app.CreateResp{}
 	err = validator.ValidateAppName(req.Name)
@@ -42,7 +58,7 @@ func (s *AppHandler) Create(ctx context.Context, req *app.CreateReq) (resp *app.
 		return returnGRPCError(err), nil
 	}
 
-	res, err := appservice.CreateApp(ctx, req.Name, req.Repo)
+	res, err := appservice.Create(ctx, req.Name, req.Repo)
 	if err != nil {
 		return returnGRPCError(err), nil
 	}
@@ -60,10 +76,6 @@ func (s *AppHandler) Triple(ctx context.Context, req *app.Number) (resp *app.Num
 
 func initAppHandler() {
 	App = NewAppHandler()
-}
-
-func InitHandlers() {
-	initAppHandler()
 }
 
 func returnGRPCError(err error) (resp *app.CreateResp) {
