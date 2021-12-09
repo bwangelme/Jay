@@ -1,7 +1,7 @@
 .PHONY: build
 
-DAE_APPROOT=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
-export DAE_APPROOT
+QAE_APPROOT=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+export QAE_APPROOT
 
 build:
 	go build -o bin/server main.go
