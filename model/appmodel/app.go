@@ -26,6 +26,26 @@ type App struct {
 	Status       int
 }
 
+func Delete(ctx context.Context, ids []int64) (int64, error) {
+	query, args, err := sqlx.In("delete from apps where id in (?);", ids)
+	if err != nil {
+		return 0, xerrors.WithMessagef(err, "ids %v", ids)
+	}
+
+	query = qsql.MySQLdb.Rebind(query)
+	result, err := qsql.MySQLdb.ExecContext(ctx, query, args...)
+	if err != nil {
+		return 0, xerrors.WithMessagef(err, "sql: %v args %v", query, args)
+	}
+
+	cnt, err := result.RowsAffected()
+	if err != nil {
+		return 0, xerrors.WithMessagef(err, "RowsAffected sql: %v args %v", query, args)
+	}
+
+	return cnt, nil
+}
+
 func Add(ctx context.Context, name string, owner string, repo string, status AppStatus) (*App, error) {
 	sql := `insert into apps(name, owner, repo, status) values (?, ?, ?, ?)`
 	args := []interface{}{name, owner, repo, status}
@@ -66,7 +86,7 @@ func Get(ctx context.Context, id int64) (*App, error) {
 
 	sql := `select * from apps where id = ?`
 	args := []interface{}{id}
-	err := qsql.MySQLdb.SelectContext(ctx, &app, sql, args...)
+	err := qsql.MySQLdb.GetContext(ctx, &app, sql, args...)
 	if err != nil {
 		return nil, xerrors.WithMessagef(err, "sql %v, args %v", sql, args)
 	}

@@ -11,6 +11,10 @@ func Create(ctx context.Context, name string, repo string) (*appmodel.App, error
 	return appmodel.Add(ctx, name, OWNER, repo, appmodel.Active)
 }
 
+func Delete(ctx context.Context, ids []int64) (int64, error) {
+	return appmodel.Delete(ctx, ids)
+}
+
 func List(ctx context.Context, start, limit int64) (total int64, apps []*appmodel.App, err error) {
 	total, ids, err := appmodel.List(ctx, start, limit)
 	if err != nil {
