@@ -68,6 +68,19 @@ func (s *AppHandler) Create(ctx context.Context, req *app.CreateReq) (resp *app.
 	return resp, nil
 }
 
+func (s *AppHandler) Delete(ctx context.Context, req *app.DeleteReq) (*app.DeleteResp, error) {
+	var resp = &app.DeleteResp{}
+	cnt, err := appservice.Delete(ctx, req.Ids)
+	if err != nil {
+		resp.Err = err.Error()
+		return resp, nil
+	}
+
+	resp.Err = ""
+	resp.Cnt = cnt
+	return resp, nil
+}
+
 func (s *AppHandler) Triple(ctx context.Context, req *app.Number) (resp *app.Number, err error) {
 	return &app.Number{
 		Value: req.Value * 3,
