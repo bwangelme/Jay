@@ -28,3 +28,11 @@ func List(ctx context.Context, start, limit int64) (total int64, apps []*appmode
 
 	return total, apps, nil
 }
+
+func Get(ctx context.Context, id int64) (*appmodel.App, error) {
+	return appmodel.Get(ctx, id)
+}
+
+func GetMulti(ctx context.Context, ids []int64) ([]*appmodel.App, error) {
+	return appmodel.GetMulti(ctx, ids)
+}
