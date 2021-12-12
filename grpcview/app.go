@@ -22,18 +22,25 @@ func NewAppHandler() *AppHandler {
 }
 
 //Get 获取 App
-func (s *AppHandler) Get(ctx context.Context, req *app.AppID) (resp *app.App, err error) {
-	return &app.App{
-		Id:    "1",
-		Name:  "bridge",
-		Owner: "xuyundong",
-	}, nil
+func (s *AppHandler) Get(ctx context.Context, req *app.GetReq) (*app.GetResp, error) {
+	resp := &app.GetResp{}
+
+	app, err := appservice.Get(ctx, req.Value)
+	if err != nil {
+		resp.Err = err.Error()
+		return resp, nil
+	}
+
+	resp.App = convertor.NewGRPCAppFromModelApp(app)
+	resp.Err = ""
+	return resp, nil
 }
 
-func (s *AppHandler) List(ctx context.Context, req *app.ListReq) (resp *app.ListResp, err error) {
-	resp = &app.ListResp{}
+func (s *AppHandler) List(ctx context.Context, req *app.ListReq) (*app.ListResp, error) {
+	resp := &app.ListResp{}
 
-	total, apps, err := appservice.List(ctx, req.Start, req.Limit)
+	// TODO: handle err
+	total, apps, _ := appservice.List(ctx, req.Start, req.Limit)
 
 	var grpcApps = make([]*app.App, 0)
 	for i := 0; i < len(apps); i++ {
@@ -42,6 +49,8 @@ func (s *AppHandler) List(ctx context.Context, req *app.ListReq) (resp *app.List
 	}
 	resp.Total = total
 	resp.Apps = grpcApps
+	resp.Start = req.Start
+	resp.Limit = req.Limit
 
 	return resp, nil
 }
@@ -51,16 +60,16 @@ func (s *AppHandler) Create(ctx context.Context, req *app.CreateReq) (resp *app.
 	err = validator.ValidateAppName(req.Name)
 
 	if err != nil {
-		return returnGRPCError(err), nil
+		return createErrResp(err), nil
 	}
 	err = validator.ValidateAppRepo(req.Repo)
 	if err != nil {
-		return returnGRPCError(err), nil
+		return createErrResp(err), nil
 	}
 
 	res, err := appservice.Create(ctx, req.Name, req.Repo)
 	if err != nil {
-		return returnGRPCError(err), nil
+		return createErrResp(err), nil
 	}
 
 	resp.App = convertor.NewGRPCAppFromModelApp(res)
@@ -91,9 +100,8 @@ func initAppHandler() {
 	App = NewAppHandler()
 }
 
-func returnGRPCError(err error) (resp *app.CreateResp) {
+func createErrResp(err error) (resp *app.CreateResp) {
 	resp = &app.CreateResp{}
 	resp.Err = fmt.Sprintf("%v", err)
-	resp.App = nil
 	return resp
 }

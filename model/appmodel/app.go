@@ -17,7 +17,7 @@ const (
 )
 
 type App struct {
-	Id           int
+	Id           int64
 	Name         string
 	Owner        string
 	Repo         string

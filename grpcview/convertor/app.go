@@ -1,7 +1,6 @@
 package convertor
 
 import (
-	"fmt"
 	"qae/model/appmodel"
 	"qae/pb/gen/app"
 
@@ -10,7 +9,7 @@ import (
 
 func NewGRPCAppFromModelApp(res *appmodel.App) *app.App {
 	return &app.App{
-		Id:          fmt.Sprintf("%d", res.Id),
+		Id:          res.Id,
 		Name:        res.Name,
 		Owner:       res.Owner,
 		Repo:        res.Repo,
