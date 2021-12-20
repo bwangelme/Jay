@@ -6,5 +6,8 @@ export QAE_APPROOT
 build:
 	go build -o bin/server main.go
 
+run:
+	go run main.go
+
 st:
 	@go test -v -run ${func} ./... || echo
