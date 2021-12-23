@@ -2,11 +2,12 @@ package grpcview
 
 import (
 	"context"
-	"qae/pb/gen/commit"
+	pbc "qae/pb/gen/commit"
+	"qae/services/commitservice"
 )
 
 type CommitHandler struct {
-	commit.UnimplementedCommitServiceServer
+	pbc.UnimplementedCommitServiceServer
 }
 
 var (
@@ -18,6 +19,11 @@ func InitCommitHandler() {
 }
 
 //Get 获取 Commit
-func (s *CommitHandler) Get(ctx context.Context, req *commit.CommitID) (resp *commit.Commit, err error) {
+func (s *CommitHandler) Get(ctx context.Context, req *pbc.CommitID) (resp *pbc.Commit, err error) {
 	return nil, nil
+}
+
+func (s *CommitHandler) Create(ctx context.Context, req *pbc.CreateReq) (*pbc.CreateResp, error) {
+	commit, err := commitservice.Add(req.App, req.GitCommit, req.AppYAML)
+	return commit, err
 }

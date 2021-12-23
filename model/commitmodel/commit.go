@@ -24,7 +24,7 @@ func genCommitKey(id int64) []byte {
 	return []byte(key)
 }
 
-func AddCommit(ctx context.Context, app string, gitCommit string, appYAML string) (*Commit, error) {
+func Add(ctx context.Context, app string, gitCommit string, appYAML string) (*Commit, error) {
 	sql := `insert into commit(app, git_commit) values (?, ?)`
 	args := []interface{}{app, gitCommit}
 
@@ -44,10 +44,10 @@ func AddCommit(ctx context.Context, app string, gitCommit string, appYAML string
 		return nil, xerrors.WithMessagef(err, "key: %v", string(key))
 	}
 
-	return GetCommit(ctx, commitId)
+	return Get(ctx, commitId)
 }
 
-func GetCommit(ctx context.Context, id int64) (*Commit, error) {
+func Get(ctx context.Context, id int64) (*Commit, error) {
 	var commit Commit
 
 	sql := `select id, app, git_commit, created_time, modified_time from commit where id = ?`
